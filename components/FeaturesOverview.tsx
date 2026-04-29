@@ -61,10 +61,15 @@ const FeaturesOverview = () => {
       </div>
 
       <motion.div
-        variants={staggerContainer}
+        variants={{
+          hidden: {},
+          visible: {
+            transition: { staggerChildren: 0.08 }
+          }
+        }}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.15 }}
         className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5"
       >
         {features.map((feature, index) => {

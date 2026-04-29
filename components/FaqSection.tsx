@@ -72,15 +72,35 @@ const FaqSection = () => {
           />
         </div>
 
-        <div className="space-y-4">
+        <motion.div 
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.05 }
+            }
+          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="space-y-4"
+        >
           {filtered.length === 0 && (
             <p className="text-center text-brand-gray dark:text-gray-500 py-8 text-sm">
               No results for "{query}"
             </p>
           )}
           {filtered.map((faq, index) => (
-            <div
+            <motion.div
               key={index}
+              variants={{
+                hidden: { opacity: 0, y: 16, scale: 0.97 },
+                visible: { 
+                  opacity: 1, 
+                  y: 0, 
+                  scale: 1,
+                  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
+                }
+              }}
               className={`border rounded-2xl transition-all duration-300 ${openIndex === index
                   ? 'border-brand-red/30 bg-gray-50 dark:bg-white/10'
                   : 'border-brand-border dark:border-white/10 bg-white dark:bg-white/5 hover:border-brand-red/20'
@@ -114,9 +134,9 @@ const FaqSection = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

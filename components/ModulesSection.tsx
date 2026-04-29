@@ -55,6 +55,12 @@ const modules = [
 
 const ModulesSection = () => {
   const [active, setActive] = useState(0);
+  const prevIndex = React.useRef(0);
+  const direction = active >= prevIndex.current ? 1 : -1;
+
+  React.useEffect(() => {
+    prevIndex.current = active;
+  }, [active]);
 
   return (
     <SectionWrapper id="modules" bg="white">
@@ -101,66 +107,92 @@ const ModulesSection = () => {
 
       <div className="max-w-6xl mx-auto px-4">
         {/* Tab Bar */}
-        <div className="flex flex-wrap gap-2 justify-center mb-10">
+        <motion.div 
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.06 }
+            }
+          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="flex flex-wrap gap-2 justify-center mb-12"
+        >
           {modules.map((mod, i) => {
             const Icon = mod.icon;
             const isActive = active === i;
             return (
-              <button
+              <motion.button
                 key={mod.id}
+                variants={fadeUp}
                 onClick={() => setActive(i)}
                 className={`
-                  flex items-center gap-2 rounded-full px-4 py-2 text-sm font-600 transition-all duration-300
-                  ${isActive
-                    ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20'
-                    : 'bg-black/[0.04] dark:bg-white/[0.06] text-brand-gray hover:bg-black/[0.07] dark:hover:bg-white/[0.09]'}
+                  relative flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-700 transition-colors duration-300
+                  ${isActive ? 'text-brand-red' : 'text-gray-500 hover:text-brand-dark dark:hover:text-white'}
                 `}
               >
-                <Icon size={16} />
-                {mod.label}
-              </button>
+                {isActive && (
+                  <motion.div
+                    layoutId="tab-pill"
+                    className="absolute inset-0 bg-brand-red/10 dark:bg-brand-red/20 rounded-full"
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <Icon size={16} className="relative z-10" />
+                <span className="relative z-10">{mod.label}</span>
+              </motion.button>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Content Panel */}
-        <div className="relative">
-          <AnimatePresence mode="wait">
+        <div className="relative overflow-hidden">
+          <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={active}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.3 }}
+              custom={direction}
+              initial={{ opacity: 0, x: direction * 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: direction * -40 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center"
             >
-              {/* Left: Image (Order 2 on mobile, 1 on desktop) */}
+              {/* Left: Image Transition Wrapper */}
               <div className="order-2 lg:order-1 relative group w-full max-w-lg mx-auto lg:max-w-none">
                 <div className="absolute inset-0 bg-brand-red/5 dark:bg-brand-red/10 rounded-3xl blur-2xl scale-95 -z-10 transition-transform duration-700 group-hover:scale-100" />
 
-                <div className="relative bg-[#f4f5f7] dark:bg-transparent dark:bg-gradient-to-br dark:from-white/[0.04] dark:to-white/[0.02] rounded-2xl p-4 md:p-6 border border-black/[0.08] dark:border-white/[0.08] shadow-2xl shadow-black/[0.04] dark:shadow-[0_20px_60px_-10px_rgba(0,0,0,0.5)] overflow-hidden">
-                  <div className="flex items-center mb-5">
-                    <div className="flex gap-1.5">
-                      <div className="w-2.5 h-2.5 rounded-full bg-brand-red/60 dark:bg-brand-red/40" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/80 dark:bg-yellow-400/40" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-green-400/80 dark:bg-green-400/40" />
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={active}
+                    initial={{ opacity: 0, scale: 0.97 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    className="relative bg-[#f4f5f7] dark:bg-transparent dark:bg-gradient-to-br dark:from-white/[0.04] dark:to-white/[0.02] rounded-2xl p-4 md:p-6 border border-black/[0.08] dark:border-white/[0.08] shadow-2xl drop-shadow-[0_24px_48px_rgba(0,0,0,0.12)] overflow-hidden"
+                  >
+                    <div className="flex items-center mb-5">
+                      <div className="flex gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full bg-brand-red/60 dark:bg-brand-red/40" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/80 dark:bg-yellow-400/40" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-green-400/80 dark:bg-green-400/40" />
+                      </div>
+                      <div className="h-5 w-48 bg-white dark:bg-white/[0.04] rounded-md ml-4 shadow-sm border border-black/[0.03] dark:border-transparent flex items-center px-2">
+                        <Search size={10} className="text-gray-300 dark:text-gray-500" />
+                      </div>
                     </div>
-                    <div className="h-5 w-48 bg-white dark:bg-white/[0.04] rounded-md ml-4 shadow-sm border border-black/[0.03] dark:border-transparent flex items-center px-2">
-                      <Search size={10} className="text-gray-300 dark:text-gray-500" />
-                    </div>
-                  </div>
 
-                  <Image
-                    src={modules[active].image}
-                    alt={modules[active].title}
-                    width={600}
-                    height={400}
-                    className="rounded-xl w-full h-auto shadow-[0_8px_30px_rgb(0,0,0,0.08)] group-hover:scale-[1.01] transition-transform duration-700"
-                  />
-                </div>
+                    <Image
+                      src={modules[active].image}
+                      alt={modules[active].title}
+                      width={600}
+                      height={400}
+                      className="rounded-xl w-full h-auto shadow-[0_8px_30px_rgb(0,0,0,0.08)] group-hover:scale-[1.01] transition-transform duration-700"
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
 
-              {/* Right: Text (Order 1 on mobile, 2 on desktop) */}
+              {/* Right: Text */}
               <div className="order-1 lg:order-2 text-center lg:text-left">
                 <h3 className="text-2xl md:text-3xl font-800 text-brand-dark dark:text-white mb-4">
                   {modules[active].title}

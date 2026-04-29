@@ -4,15 +4,28 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { fadeUp } from '@/lib/animations';
 
 const Footer = () => {
   return (
     <footer className="bg-gray-50/80 dark:bg-black/80 backdrop-blur-md text-gray-900 dark:text-white pt-16 md:pt-20 pb-10 relative border-t border-black/5 dark:border-white/5">
       <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-brand-red to-transparent opacity-30 dark:opacity-60 absolute top-0 left-0" />
       <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-center sm:text-left">
+        <motion.div 
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.07 }
+            }
+          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-center sm:text-left"
+        >
           {/* Brand Col */}
-          <div className="space-y-6 flex flex-col items-center sm:items-start">
+          <motion.div variants={fadeUp} className="space-y-6 flex flex-col items-center sm:items-start">
             <Link href="/" className="relative h-10 w-32 transition-opacity hover:opacity-90">
               <Image
                 src="/logos/logo-dark.png"
@@ -66,10 +79,10 @@ const Footer = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Product Col */}
-          <div>
+          <motion.div variants={fadeUp}>
             <h4 className="text-lg font-700 mb-8">Product</h4>
             <ul className="space-y-4 text-gray-600 dark:text-gray-400">
               <li><Link href="#features" className="hover:text-brand-red transition-colors">Features</Link></li>
@@ -77,10 +90,10 @@ const Footer = () => {
               <li><Link href="#" className="hover:text-brand-red transition-colors">Roadmap</Link></li>
               <li><Link href="#" className="hover:text-brand-red transition-colors">Releases</Link></li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Company Col */}
-          <div>
+          <motion.div variants={fadeUp}>
             <h4 className="text-lg font-700 mb-8">Company</h4>
             <ul className="space-y-4 text-gray-600 dark:text-gray-400">
               <li><Link href="#" className="hover:text-brand-red transition-colors">About Us</Link></li>
@@ -89,10 +102,10 @@ const Footer = () => {
               <li><Link href="/contact" className="hover:text-brand-red transition-colors">Contact Us</Link></li>
               <li><Link href="/#faq" className="hover:text-brand-red transition-colors">FAQ</Link></li>
             </ul>
-          </div>
+          </motion.div>
 
           {/* Contact Col */}
-          <div>
+          <motion.div variants={fadeUp}>
             <h4 className="text-lg font-700 mb-8">Contact</h4>
             <ul className="space-y-4 text-gray-600 dark:text-gray-400">
               <li className="flex items-start">
@@ -108,8 +121,8 @@ const Footer = () => {
                 <span>MOON,<br />Chand 560102</span>
               </li>
             </ul>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         <div className="pt-8 border-t border-black/5 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 text-xs md:text-sm text-gray-500 dark:text-gray-400 font-500 text-center md:text-left">
           <p>© 2026 UNI5 Tech LLP. All rights reserved.</p>
@@ -144,5 +157,6 @@ const Footer = () => {
     </footer>
   );
 };
+
 
 export default Footer;

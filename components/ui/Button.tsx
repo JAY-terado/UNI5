@@ -11,11 +11,11 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
-const Button = ({ 
-  children, 
-  variant = 'primary', 
-  href, 
-  onClick, 
+const Button = ({
+  children,
+  variant = 'primary',
+  href,
+  onClick,
   className = '',
   type = 'button',
   disabled = false
@@ -26,7 +26,7 @@ const Button = ({
     const diameter = Math.max(el.clientWidth, el.clientHeight);
     const radius = diameter / 2;
     const rect = el.getBoundingClientRect();
-    
+
     circle.style.cssText = `
       width:${diameter}px; height:${diameter}px;
       left:${e.clientX - rect.left - radius}px;
@@ -36,16 +36,16 @@ const Button = ({
       transform:scale(0); animation:ripple 500ms linear;
       pointer-events:none;
     `;
-    
+
     el.style.position = 'relative';
     el.style.overflow = 'hidden';
     el.appendChild(circle);
-    
+
     setTimeout(() => circle.remove(), 600);
   };
 
   const baseStyles = "px-6 py-3 rounded-lg font-600 transition-all duration-200 text-sm md:text-base inline-flex items-center justify-center relative overflow-hidden";
-  
+
   const variants = {
     primary: "bg-brand-red text-white hover:bg-brand-red/90 shadow-lg shadow-brand-red/20 before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:-translate-x-full hover:before:translate-x-full before:transition-transform before:duration-700",
     secondary: "bg-brand-dark dark:bg-white dark:text-brand-dark text-white hover:bg-brand-dark/90 dark:hover:bg-white/90",
@@ -65,13 +65,13 @@ const Button = ({
   }
 
   return (
-    <button 
-      type={type} 
+    <button
+      type={type}
       onClick={(e) => {
         handleRipple(e);
         onClick?.();
-      }} 
-      className={combinedClasses} 
+      }}
+      className={combinedClasses}
       disabled={disabled}
     >
       {children}
