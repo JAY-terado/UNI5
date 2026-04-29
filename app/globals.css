@@ -5,11 +5,23 @@
 :root {
   --foreground-rgb: 17, 24, 39;
   --background-rgb: 255, 255, 255;
+  --nav-bg: rgba(255, 255, 255, 0.4);
+  --nav-bg-scrolled: rgba(255, 255, 255, 0.75);
+  --nav-border: rgba(255, 255, 255, 0.2);
+  --nav-border-scrolled: rgba(255, 255, 255, 0.3);
+  --nav-glow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+
 }
 
 .dark {
   --foreground-rgb: 255, 255, 255;
   --background-rgb: 17, 24, 39;
+  --nav-bg: rgba(10, 10, 15, 0.4);
+  --nav-bg-scrolled: rgba(10, 10, 15, 0.7);
+  --nav-border: rgba(255, 255, 255, 0.1);
+  --nav-border-scrolled: rgba(255, 255, 255, 0.15);
+  --nav-glow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+
 }
 
 body {
