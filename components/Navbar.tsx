@@ -19,6 +19,10 @@ const Navbar = () => {
 
   useEffect(() => {
     setMounted(true);
+    
+    // Set initial scroll state immediately on mount
+    setScrolled(scrollY.get() > 50);
+
     const sections = ['home', 'features', 'modules', 'faq'];
     const observer = new IntersectionObserver(
       (entries) => {
@@ -58,18 +62,18 @@ const Navbar = () => {
         animate={{
           width: scrolled ? (typeof window !== 'undefined' && window.innerWidth < 768 ? "100%" : "max-content") : "100%",
           borderRadius: scrolled ? (typeof window !== 'undefined' && window.innerWidth < 768 ? "0px" : "100px") : "0px",
-          backgroundColor: scrolled
-            ? (mounted && resolvedTheme === 'dark' ? "rgba(10, 10, 15, 0.95)" : "rgba(255, 255, 255, 0.95)")
-            : (mounted && resolvedTheme === 'dark' ? "rgba(15, 15, 20, 0.4)" : "rgba(255, 255, 255, 0.4)"),
+          backgroundColor: scrolled ? "var(--nav-bg-scrolled)" : "var(--nav-bg)",
           border: (scrolled && typeof window !== 'undefined' && window.innerWidth >= 768)
-            ? (mounted && resolvedTheme === 'dark' ? "1px solid rgba(255, 255, 255, 0.15)" : "1px solid rgba(0, 0, 0, 0.08)")
+            ? "1px solid var(--nav-border-scrolled)"
             : "none",
           borderBottom: !scrolled
-            ? (mounted && resolvedTheme === 'dark' ? "1px solid rgba(255, 255, 255, 0.08)" : "1px solid rgba(0, 0, 0, 0.05)")
+            ? "1px solid var(--nav-border)"
             : undefined,
           boxShadow: scrolled
-            ? (mounted && resolvedTheme === 'dark' ? "0 25px 50px -12px rgba(0, 0, 0, 0.6)" : "0 20px 40px -10px rgba(0, 0, 0, 0.1)")
-            : (mounted && resolvedTheme === 'dark' ? "inset 0 1px 0 rgba(255,255,255,0.05)" : "inset 0 1px 0 rgba(255,255,255,0.4)"),
+            ? (mounted && resolvedTheme === 'dark' 
+                ? "0 25px 50px -12px rgba(0, 0, 0, 0.6), var(--nav-glow)" 
+                : "0 20px 40px -10px rgba(0, 0, 0, 0.1), var(--nav-glow)")
+            : "var(--nav-glow)",
           y: scrolled ? (typeof window !== 'undefined' && window.innerWidth < 768 ? 0 : 12) : 0,
         }}
         transition={{
@@ -78,7 +82,7 @@ const Navbar = () => {
           damping: 30,
           mass: 1
         }}
-        className="pointer-events-auto relative backdrop-blur-2xl flex items-center justify-center"
+        className={`pointer-events-auto relative backdrop-blur-3xl flex items-center justify-center transition-opacity duration-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}
       >
         <motion.div
           className={`flex items-center justify-center md:justify-between w-full max-w-7xl mx-auto relative ${scrolled ? 'h-16 md:h-14 space-x-6 md:space-x-10 px-6 md:px-12' : 'h-20 space-x-12 px-6 md:px-6'
