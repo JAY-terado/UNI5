@@ -6,10 +6,12 @@ import Image from 'next/image';
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { usePathname } from 'next/navigation';
 import Button from './ui/Button';
 import { ThemeToggle } from './ui/ThemeToggle';
 
 const Navbar = () => {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -19,6 +21,9 @@ const Navbar = () => {
 
   useEffect(() => {
     setMounted(true);
+    if (pathname !== '/') {
+      setActiveSection(''); // Clear active section for other pages
+    }
     
     // Set initial scroll state immediately on mount
     setScrolled(scrollY.get() > 50);
@@ -111,30 +116,35 @@ const Navbar = () => {
 
           {/* Desktop Nav Links */}
           <motion.div className="hidden md:flex items-center space-x-1 lg:space-x-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`
-                  relative text-xs lg:text-sm font-600
-                  transition-all px-3 py-2 rounded-full
-                  hover:bg-black/5 dark:hover:bg-white/10
-                  ${activeSection === link.name.toLowerCase()
-                    ? 'text-brand-red'
-                    : scrolled ? 'text-brand-dark dark:text-gray-300' : 'text-brand-dark dark:text-white'
-                  }
-                `}
-              >
-                {link.name}
-                {activeSection === link.name.toLowerCase() && (
-                  <motion.span
-                    layoutId="nav-dot"
-                    className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-brand-red"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                )}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = (pathname === '/' && link.href.includes('#') && activeSection === link.name.toLowerCase()) || 
+                              (pathname === link.href);
+              
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`
+                    relative text-xs lg:text-sm font-600
+                    transition-all px-3 py-2 rounded-full
+                    hover:bg-black/5 dark:hover:bg-white/10
+                    ${isActive
+                      ? 'text-brand-red'
+                      : scrolled ? 'text-brand-dark dark:text-gray-300' : 'text-brand-dark dark:text-white'
+                    }
+                  `}
+                >
+                  {link.name}
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-dot"
+                      className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-brand-red"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
           </motion.div>
 
           {/* Actions */}
